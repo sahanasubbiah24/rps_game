@@ -6,10 +6,10 @@ import urllib.request
 import ssl
 import os
 
-# Fix SSL certificate issue
+
 ssl._create_default_https_context = ssl._create_unverified_context
 
-# Download the hand landmark model
+
 model_path = 'hand_landmarker.task'
 if not os.path.exists(model_path):
     print("Downloading hand landmark model...")
@@ -17,7 +17,6 @@ if not os.path.exists(model_path):
     urllib.request.urlretrieve(url, model_path)
     print("Model downloaded!")
 
-# Create hand landmarker
 base_options = python.BaseOptions(model_asset_path=model_path)
 options = vision.HandLandmarkerOptions(base_options=base_options, num_hands=2)
 detector = vision.HandLandmarker.create_from_options(options)
@@ -32,15 +31,13 @@ while True:
         break
     
     frame = cv2.flip(frame, 1)
-    
-    # Convert to RGB
+
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
-    
-    # Detect hands
+
     detection_result = detector.detect(mp_image)
     
-    # Draw landmarks
+
     if detection_result.hand_landmarks:
         for hand_landmarks in detection_result.hand_landmarks:
             for landmark in hand_landmarks:
